@@ -19,6 +19,7 @@
   "homepage": "https://github.com/arsalan318/Image-File-Upload#readme",
   "dependencies": {
     "body-parser": "^1.19.0",
+    "crypto": "^1.0.1",
     "ejs": "^2.6.2",
     "express": "^4.17.1",
     "gridfs-stream": "^1.1.1",
