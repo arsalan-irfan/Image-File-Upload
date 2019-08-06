@@ -50,9 +50,25 @@ const upload = multer({ storage });
 //@route GET /
 //@desc Loads form
 app.get('/', (req, res) => {
-  res.render('index');
+  gfs.files.find().toArray((err, files) => {
+    // Check if files
+    if (!files || files.length === 0) {
+      res.render('index', { files: false });
+    } else {
+      files.map(file => {
+        if (
+          file.contentType === 'image/jpeg' ||
+          file.contentType === 'image/png'
+        ) {
+          file.isImage = true;
+        } else {
+          file.isImage = false;
+        }
+      });
+      res.render('index', { files: files });
+    }
+  });
 });
-
 //@route GET /
 //@desc Loads form
 //upload.single(Input File name)
@@ -109,6 +125,18 @@ app.get('/image/:filename', (req, res) => {
       res.status(404).json({
         err: 'Not an image'
       });
+    }
+  });
+});
+
+// @route DELETE /file/:id
+// @desc  Delete file or image
+app.delete('/files/:id', (req, res) => {
+  gfs.remove({ _id: req.params.id, root: 'uploads' }, (err, gridStore) => {
+    if (err) {
+      res.json({ err: err });
+    } else {
+      res.redirect('/');
     }
   });
 });
